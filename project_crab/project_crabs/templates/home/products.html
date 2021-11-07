@@ -1,0 +1,93 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}
+<title> Crab Admin | Products </title>
+{% endblock %}
+{% block content %}
+<div class="container d-flex flex-column" style="height: 100%; width: 100%;">
+  <div class="card h-50 shadow-sm">
+    <div class="card-header d-sm-flex flex-row justify-content-between">
+      <div class="d-flex flex-row justify-content-center align-items-center">
+        <img src="{% static 'img/category_black.svg' %}" style="width: 32px; height: 32px;">
+        <span class="mx-2" style="font-size:1.5em; font-weight: 400">Daftar Produk Crab</span>
+      </div>
+      <div class="d-flex flex-row justify-content-end align-items-center w-75">
+        <input class="form-control w-50" type="search" placeholder="Cari Nama Produk ..." aria-label="Search"
+          id="search-products-id" onkeyup="search('products')">
+        <div class="mycontent-left mx-2">
+        </div>
+        <button type="button" class="btn btn-success w-25" onclick="window.location = 'products/add_product'">Tambah Produk</button>
+      </div>
+    </div>
+    <div class="card-body overflow-auto">
+      <table class="table align-middle table-striped table-hover" id="tableProducts">
+        <tr>
+          <th scope="col">No</th>
+          <th scope="col">Nama Produk</th>
+          <th scope="col">Satuan</th>
+          <th scope="col">Status Produk</th>
+          <th scope="col">Action</th>
+        </tr>
+        <tbody>
+        {% if products_data %}
+          {% for products in products_data %}
+            <tr>
+              <td scope="row">{{ forloop.counter }}</td>
+              <td scope="row">{{ products.nama_material }}</td>
+              <td scope="row">{{ products.id_satuan__nama_satuan }}</td>
+              <td scope="row">{% if products.status_material == 1 %} <span class="badge rounded-pill bg-success w-75">Aktif</span> {% else %}<span class="badge rounded-pill bg-secondary w-75">Tidak Aktif</span>{% endif %}</td>
+              <td scope="row"><button type="button" class="btn btn-secondary w-100" onclick="window.location = 'products/product_detail/{{ products.id_material }}'">Lihat Detail</button></td>
+            </tr>
+          {% endfor %}
+        {% else %}
+          <td scope="row" colspan="5" style="text-align: center; height: 28vh;">Data produk crab belum tersedia, coba <span class="hover_text" style="font-weight: 600; color: #198754;" onclick="window.location = 'products/add_product'">tambahkan</span> sesuatu...</td>
+        {% endif %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="card h-50 shadow-sm mt-2">
+    <div class="card-header d-sm-flex flex-row justify-content-between">
+      <div class="d-flex flex-row justify-content-center align-items-center">
+        <img src="{% static 'img/category_black.svg' %}" style="width: 32px; height: 32px;">
+        <span class="mx-2" style="font-size:1.5em; font-weight: 400">Daftar Mutu Crab</span>
+      </div>
+      <div class="d-flex flex-row justify-content-end align-items-center w-75">
+        <input class="form-control w-50" type="search" placeholder="Cari Nama Mutu ..." aria-label="Search"
+          id="search-mutu-id" onkeyup="search('mutu')">
+        <div class="mycontent-left mx-2">
+        </div>
+        <button type="button" class="btn btn-success w-25" onclick="window.location = 'products/add_mutu'">Tambah Mutu</button>
+      </div>
+    </div>
+    <div class="card-body overflow-auto">
+      <table class="table align-middle table-striped table-hover" id="tableMutu">
+        <tr>
+          <th scope="col">No</th>
+          <th scope="col">Nama Mutu</th>
+          <th scope="col">Action</th>
+        </tr>
+        <tbody>
+        {% if mutu_data %}
+          {% for mutu in mutu_data %}
+            <tr>
+              <td scope="row">{{ forloop.counter }}</td>
+              <td scope="row" style="width:70%">{{ mutu.nama_master_mutu }}</td>
+              <td scope="row">
+              {% if mutu.status_master_mutu == 1 %}
+              <button type="button" class="btn btn-danger w-100" onclick="window.location = 'products/hide_master_mutu/{{ mutu.id_master_mutu }}'">Sembunyikan</button>
+              {% else %}
+              <button type="button" class="btn btn-success w-100" onclick="window.location = 'products/show_master_mutu/{{ mutu.id_master_mutu }}'">Tampilkan</button>
+              {% endif %}
+              </td>
+            </tr>
+          {% endfor %}
+        {% else %}
+          <td scope="row" colspan="3" style="text-align: center; height: 28vh;">Data mutu crab belum tersedia, coba <span class="hover_text" style="font-weight: 600; color: #198754;" onclick="window.location = 'products/add_mutu'">tambahkan</span> sesuatu...</td>
+        {% endif %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,88 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}
+<title> Crab Admin | Vendor </title>
+{% endblock %}
+{% block content %}
+<div class="container d-flex flex-row flex-grow-1 align-items-center mb-3">
+  <div class="back d-flex flex-row align-items-center" onclick="window.location = '/products'">
+    <img src="{% static 'img/arrow_back_black.svg' %}" style="width: 28px; height: 28px;">
+    <span class="ms-3" style="font-weight: 500; font-size: 1.5em;">Kembali</span>
+  </div>
+</div>
+<div class="container d-flex flex-column" style="width: 100%;">
+  <div class="card" style="height: 87vh;">
+    <div class="card-header d-sm-flex flex-row justify-content-between">
+      <div class="d-flex flex-row justify-content-center align-items-center">
+        <img src="{% static 'img/category_black.svg' %}" style="width: 32px; height: 32px;">
+        <span class="mx-2" style="font-size:1.5em; font-weight: 400">Tambah Produk</span>
+      </div>
+      <div class="d-flex flex-row justify-content-end align-items-center w-75">
+        <button type="button" class="btn btn-success w-25" id="btn_simpanData" onclick="save_form()">Simpan</button>
+        <script>
+          var help;
+
+          function setHelp() {
+            help = document.getElementById("select_status_produk").value;
+            if (help == 0) {
+              document.getElementById("status_produk_help").innerHTML = "Selama produk tidak aktif, maka produk tidak bisa digunakan untuk transaksi.";
+            } else if (help == 1) {
+              document.getElementById("status_produk_help").innerHTML = "Produk dapat digunakan untuk transaksi.";
+            }
+          }
+
+          function save_form(){
+            var valid
+            var counter = 0;
+            for (var i = 0; i < 3; i++){
+              valid = document.getElementsByClassName("form-control")[i].checkValidity();
+              if (valid == false){
+                if (i != 2 || i != 3){
+                  counter++;
+                }
+              }
+            }
+            console.log(counter);
+            if(counter == 0){
+              document.getElementById("form_produk").submit();
+            } else if(counter > 0) {
+              alert("Isian Tidak Boleh Kosong");
+            }
+          }
+
+          $(document).ready(function () {
+            setHelp();
+            getData();
+          });
+        </script>
+      </div>
+    </div>
+    <div class="card-body overflow-auto">
+      <form action="add_product/save" method="POST" id="form_produk">
+      {% csrf_token %}
+        <div class="d-flex flex-row">
+          <div class="w-50">
+            <label for="satuan_produk" class="form-label">Jenis Produk</label>
+            <select name="jenis_produk" class="form-control" id="select_satuan_produk" required>
+            {% for product in product_data %}
+              <option value="{{ product.id_material }}">{{ product.nama_material }}</option>
+            {% endfor %}
+            </select>
+          </div>
+          <div class="w-50 ms-3">
+            <label for="status_produk" class="form-label">Status Aktif</label>
+            <select name="status_produk" class="form-control" id="select_status_produk" onChange="setHelp()" required>
+              <option value="1">Aktif</option>
+              <option value="0">Non Aktif</option>
+            </select>
+            <div id="status_produk_help" class="form-text"></div>
+          </div>
+        </div>
+        <div class="d-flex flex-row mt-3 justify-content-end me-4">
+          <img src="{% static 'img/add_product_illust.svg' %}" style="width: 360px; height: auto;">
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

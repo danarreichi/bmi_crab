@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}
+<title> Crab Admin | Vendors </title>
+{% endblock %}
+{% block content %}
+<div class="container d-flex flex-column h-100">
+  <div class="card h-100 shadow-sm">
+    <div class="card-header">
+      <div class="d-sm-flex flex-row justify-content-between">
+        <div class="d-flex flex-row justify-content-center align-items-center">
+          <img src="{% static 'img/account_circle_black.svg' %}" style="width: 32px; height: 32px">
+          <span class="mx-2" style="font-size:1.5em; font-weight: 400">Daftar Vendor</span>
+        </div>
+        <div class="d-flex flex-row justify-content-end align-items-center w-75">
+          <input class="form-control w-50" type="search" placeholder="Cari Nama Vendor ..." aria-label="Search"
+            id="search-vendors-id" onkeyup="search('vendors')">
+          <select name="selector" class="form-select ms-2 w-25" id="filter-selector"
+            onchange="selector(this); search('vendors');">
+            <option value="1">Nama Vendor</option>
+            <option value="2">Lokasi Vendor</option>
+            <option value="3">Kode SAP</option>
+            <option value="4">Rekening Vendor</option>
+          </select>
+          <div class="mycontent-left mx-2">
+          </div>
+          <button type="button" class="btn btn-success w-25" onclick="window.location = 'vendors/add_vendor'">Tambah Vendor</button>
+        </div>
+      </div>
+    </div>
+    <div class="card-body overflow-auto">
+      <table class="table align-middle table-striped table-hover" id="tableVendors">
+        <tr>
+          <th scope="col">No</th>
+          <th scope="col">Nama Vendor</th>
+          <th scope="col">Lokasi Vendor</th>
+          <th scope="col">Kode SAP</th>
+          <th scope="col">Rekening Vendor</th>
+          <th scope="col">Jumlah Produk</th>
+          <th scope="col">Action</th>
+        </tr>
+        <tbody>
+        {% if vendors_data %}
+          {% for vendor in vendors_data %}
+            <tr>
+              <td scope="row">{{ forloop.counter }}</td>
+              <td scope="row">{{ vendor.nama_supplier }}</td>
+              <td scope="row">{{ vendor.id_lokasi.nama_lokasi }}</td>
+              <td scope="row">{{ vendor.kode_sap }}</td>
+              <td scope="row">{{ vendor.no_rek }}</td>
+              <td scope="row">{{ vendor.JUMLAH_PRODUK }}</td>
+              <td scope="row" class="d-flex flex-row justify-content-between">
+              <button type="button" class="btn btn-secondary" onclick="window.location = 'vendors/edit_vendor/{{ vendor.id_supplier }}'">Ubah Data</button>
+              <button type="button" class="btn btn-success ms-2 flex-grow-1 w-50" onclick="window.location = 'vendors/daftar_product_vendor/{{ vendor.id_supplier }}'">Daftar Produk</button>
+              </td>
+            </tr>
+          {% endfor %}
+        {% else %}
+          <td scope="row" colspan="7" style="text-align: center; height: 76vh;">Data vendor belum tersedia, coba <span class="hover_text" style="font-weight: 600; color: #198754;" onclick="window.location = 'vendors/add_vendor'">tambahkan</span> sesuatu...</td>
+        {% endif %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}

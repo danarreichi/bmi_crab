@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}
+<title> Crab Admin | Vendor </title>
+{% endblock %}
+{% block content %}
+<div class="container d-flex flex-row flex-grow-1 align-items-center mb-3">
+  <div class="back d-flex flex-row align-items-center" onclick="window.location = '/vendors'">
+    <img src="{% static 'img/arrow_back_black.svg' %}" style="width: 28px; height: 28px;">
+    <span class="ms-3" style="font-weight: 500; font-size: 1.5em;">Kembali</span>
+  </div>
+</div>
+<div class="container d-flex flex-column" style="height: 100%; width: 100%;">
+  <div class="card h-100 shadow-sm" style="height: 87vh;">
+    <div class="card-header d-sm-flex flex-row justify-content-between">
+      <div class="d-flex flex-row justify-content-center flex-grow-0 align-items-center">
+        <img src="{% static 'img/category_black.svg' %}" style="width: 32px; height: 32px;">
+        <span class="mx-2" style="font-size:1.5em; font-weight: 400">Daftar Produk Vendor {{ vendor_data.nama_supplier_substr_6 }}</span>
+      </div>
+      <div class="d-flex flex-row justify-content-end align-items-center w-50">
+        <input class="form-control w-50" type="search" placeholder="Cari Nama Produk ..." aria-label="Search"
+          id="search-products-id" onkeyup="search('products')">
+        <div class="mycontent-left mx-2">
+        </div>
+        <button type="button" class="btn btn-success w-25" onclick="window.location = '{{ vendor_data.id_supplier }}/add_product'">Tambah Produk</button>
+      </div>
+    </div>
+    <div class="card-body overflow-auto">
+      <table class="table align-middle table-striped table-hover" id="tableProducts">
+        <tr>
+          <th scope="col">No</th>
+          <th scope="col">Nama Produk</th>
+          <th scope="col">Jumlah Jenis Mutu</th>
+          <th scope="col">Action</th>
+        </tr>
+        <tbody>
+        {% if daftarProduk_data %}
+          {% for daftarProduk in daftarProduk_data %}
+              <tr>
+                <td scope="row">{{forloop.counter}}</td>
+                <td scope="row">{{ daftarProduk.id_material__nama_material }}</td>
+                <td scope="row">{{ daftarProduk.jumlah }} Jenis Mutu</td>
+                <td scope="row"><button type="button" class="btn btn-secondary w-100" onclick="window.location = 'products/product_detail/'">Lihat Detail</button></td>
+              </tr>
+          {% endfor %}
+        {% else %}
+          <td scope="row" colspan="4" style="text-align: center; height: 69vh;">Data produk untuk vendor {{ vendor_data.nama_supplier }} belum tersedia, coba <span class="hover_text" style="font-weight: 600; color: #198754;" onclick="window.location = '{{ product_data.id_material }}/tambah_mutu'">tambahkan</span> sesuatu...</td>
+        {% endif %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}

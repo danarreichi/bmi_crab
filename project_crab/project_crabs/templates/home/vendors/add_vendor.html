@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}
+<title> Crab Admin | Vendors </title>
+{% endblock %}
+{% block content %}
+<div class="container d-flex flex-row flex-grow-1 align-items-center mb-3">
+  <div class="back d-flex flex-row align-items-center" onclick="window.location = '/vendors'">
+    <img src="{% static 'img/arrow_back_black.svg' %}" style="width: 28px; height: 28px;">
+    <span class="ms-3" style="font-weight: 500; font-size: 1.5em;">Kembali</span>
+  </div>
+</div>
+<div class="container d-flex flex-column" style="width: 100%;">
+  <div class="card" style="height: 87vh;">
+    <div class="card-header d-sm-flex flex-row justify-content-between">
+      <div class="d-flex flex-row justify-content-center align-items-center">
+        <img src="{% static 'img/account_circle_black.svg' %}" style="width: 32px; height: 32px;">
+        <span class="mx-2" style="font-size:1.5em; font-weight: 400">Tambah Vendor</span>
+      </div>
+      <div class="d-flex flex-row justify-content-end align-items-center w-75">
+        <button type="button" class="btn btn-success w-25" id="btn_simpanData" onclick="save_form()">Simpan</button>
+        <script>
+          function save_form(){
+            var valid
+            var counter = 0;
+            for (var i = 0; i < 4; i++){
+              valid = document.getElementsByClassName("form-control")[i].checkValidity();
+              if (valid == false){
+                if (i != 2){
+                  counter++;
+                }
+              }
+            }
+            console.log(counter);
+            if(counter == 0){
+              document.getElementById("form_vendor").submit();
+            } else if(counter > 0) {
+              alert("Isian Tidak Boleh Kosong");
+            }
+          }
+
+          function onlyNumberKey(evt) {
+            // Only ASCII character in that range allowed
+            var ASCIICode = (evt.which) ? evt.which : evt.keyCode
+            if (ASCIICode > 31 && (ASCIICode < 48 || ASCIICode > 57))
+              return false;
+              return true;
+          }
+        </script>
+      </div>
+    </div>
+    <div class="card-body overflow-auto">
+      <form action="add_vendor/save" class="h-100" method="POST" id="form_vendor">
+      {% csrf_token %}
+      <div class="d-flex flex-row h-100">
+        <div class="d-flex w-50 flex-column">
+          {% comment %} <label for="id_vendor" class="form-label">ID Vendor</label>
+          <input type="text" class="form-control" name="id_vendor" maxlength="10" onkeyup="this.value = this.value.toUpperCase()" required> {% endcomment %}
+          
+          <label for="nama_vendor" class="form-label">Nama Vendor</label>
+          <input type="text" class="form-control" name="nama_vendor" id="input_nama_vendor" required>
+
+          <label for="lokasi_vendor" class="form-label mt-4">Lokasi Vendor</label>
+          <select name="lokasi_vendor" class="form-control" id="select_lokasi_vendor" required>
+            {% for lokasi in lokasi_data %}
+              <option value="{{ lokasi.id_lokasi }}">{{ lokasi.nama_lokasi }}</option>
+            {% endfor %}
+          </select>
+
+          <label for="no_sap" class="form-label mt-4">No SAP</label>
+          <input type="text" class="form-control" name="no_sap" maxlength="10" onkeyup="this.value = this.value.toUpperCase()" onkeypress="return onlyNumberKey(event)" required>
+        
+          <label for="no_rek_vendor" class="form-label mt-4">No. Rek Vendor</label>
+          <input type="text" class="form-control" name="no_rek_vendor" id="input_no_rek_vendor" minlength="10" onkeyup="this.value = this.value.toUpperCase()" onkeypress="return onlyNumberKey(event)" required>
+        </div>
+        <div class="d-flex w-50 flex-column align-items-end justify-content-end">
+           <img src="{% static 'img/add_vendor_illust.svg' %}" style="width: 360px; height: auto;">
+        </div>
+      </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

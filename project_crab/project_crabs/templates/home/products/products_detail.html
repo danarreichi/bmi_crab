@@ -1,0 +1,115 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}
+<title> Crab Admin | Product Detail </title>
+{% endblock %}
+{% block content %}
+<div class="container d-flex flex-row flex-grow-1 align-items-center mb-3">
+  <div class="back d-flex flex-row align-items-center" onclick="window.location = '/products'">
+    <img src="{% static 'img/arrow_back_black.svg' %}" style="width: 28px; height: 28px;">
+    <span class="ms-3" style="font-weight: 500; font-size: 1.5em;">Kembali</span>
+  </div>
+</div>
+<div class="container d-flex flex-column" style="width: 100%; height: 90%;">
+  <div class="card h-100">
+    <div class="card-header d-sm-flex flex-row justify-content-between">
+      <div class="d-flex flex-row justify-content-center align-items-center">
+        <img src="{% static 'img/category_black.svg' %}" style="width: 32px; height: 32px;">
+        <span class="mx-2" style="font-size:1.5em; font-weight: 400">Detail Produk</span>
+      </div>
+      <div class="d-flex flex-row justify-content-end align-items-center w-75">
+        <button type="button" class="btn btn-success w-25" id="btn_ubahData" onclick="show_batalkan()">Ubah
+          Data</button>
+        <button type="button" class="btn btn-success w-25" id="btn_simpanData" onclick="save_form()"
+          style="display: none;">Simpan</button>
+        <button class="btn btn-danger w-25 ms-3" id="btn_batalUbah" onclick="show_ubah()"
+          style="display: none;">Batalkan</button>
+        <script>
+          var help;
+
+          var s_p, n_p, s_a
+
+          function getData(){
+            n_p = document.getElementById("input_nama_produk").value;
+            s_p = document.getElementById("select_satuan_produk").value;
+            s_a = document.getElementById("select_status_produk").value;
+          }
+
+          function restoreData(){
+            document.getElementById("input_nama_produk").value = n_p;
+            document.getElementById("select_satuan_produk").value = s_p;
+            document.getElementById("select_status_produk").value = s_a;
+            setHelp();
+          }
+
+          function show_batalkan() {
+            document.getElementById("btn_ubahData").style.display = "none";
+            document.getElementById("input_nama_produk").readOnly = false;
+            document.getElementById("select_satuan_produk").disabled = false;
+            document.getElementById("select_status_produk").disabled = false;
+            document.getElementById("btn_simpanData").style.display = "";
+            document.getElementById("btn_batalUbah").style.display = "";
+          }
+          
+          function show_ubah() {
+            restoreData();
+            document.getElementById("btn_ubahData").style.display = "";
+            document.getElementById("select_satuan_produk").disabled = true;
+            document.getElementById("select_status_produk").disabled = true;
+            document.getElementById("input_nama_produk").readOnly = true;
+            document.getElementById("btn_simpanData").style.display = "none";
+            document.getElementById("btn_batalUbah").style.display = "none";
+          }
+
+          function setHelp() {
+            help = document.getElementById("select_status_produk").value;
+            if (help == 0) {
+              document.getElementById("status_produk_help").innerHTML = "Selama produk tidak aktif, maka produk tidak bisa digunakan untuk transaksi.";
+            } else if (help == 1) {
+              document.getElementById("status_produk_help").innerHTML = "Produk dapat digunakan untuk transaksi.";
+            }
+          }
+
+          function save_form(){
+            document.getElementById("form_produk").submit();
+          }
+
+          $(document).ready(function () {
+            setHelp();
+            getData();
+          });
+        </script>
+      </div>
+    </div>
+    <div class="card-body overflow-auto">
+      <form action="{{ product_data.id_material }}/save" method="POST" id="form_produk">
+      {% csrf_token %}
+        <div class="d-flex flex-row">
+          <div class="w-100">
+            <label for="nama_produk" class="form-label">Nama Produk</label>
+            <input type="text" class="form-control" name="nama_produk" id="input_nama_produk" value="{{ product_data.nama_material }}" readonly>
+          </div>
+        </div>
+        <div class="d-flex flex-row mt-3">
+          <div class="w-50">
+            <label for="satuan_produk" class="form-label">Satuan Produk</label>
+            <select name="satuan_produk" class="form-control" id="select_satuan_produk" disabled>
+            {% for satuan in satuan_data %}
+              <option value="{{ satuan.id_satuan }}" {% if satuan.id_satuan == product_data.id_satuan_str %} selected {% endif %} >{{ satuan.nama_satuan }}</option>
+            {% endfor %}
+            </select>
+          </div>
+          <div class="w-50 ms-3">
+            <label for="status_produk" class="form-label">Status Produk</label>
+            <select name="status_produk" class="form-control" id="select_status_produk" onChange="setHelp()" disabled>
+              <option value="1" {% if product_data.status_material == 1 %} selected {% endif %}>Aktif</option>
+              <option value="0" {% if product_data.status_material == 0 %} selected {% endif %}>Non Aktif</option>
+            </select>
+            <div id="status_produk_help" class="form-text"></div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

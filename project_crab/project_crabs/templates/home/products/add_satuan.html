@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}
+<title> Crab Admin | Products </title>
+{% endblock %}
+{% block content %}
+<div class="container d-flex flex-row flex-grow-1 align-items-center mb-3">
+  <div class="back d-flex flex-row align-items-center" onclick="window.location = '/products/add_product'">
+    <img src="{% static 'img/arrow_back_black.svg' %}" style="width: 28px; height: 28px;">
+    <span class="ms-3" style="font-weight: 500; font-size: 1.5em;">Kembali</span>
+  </div>
+</div>
+<div class="container d-flex flex-column" style="width: 100%;">
+  <div class="card" style="height: 87vh;">
+    <div class="card-header d-sm-flex flex-row justify-content-between">
+      <div class="d-flex flex-row justify-content-center align-items-center">
+        <img src="{% static 'img/category_black.svg' %}" style="width: 32px; height: 32px;">
+        <span class="mx-2" style="font-size:1.5em; font-weight: 400">Tambah Satuan</span>
+      </div>
+      <div class="d-flex flex-row justify-content-end align-items-center w-75">
+        <button type="button" class="btn btn-success w-25" id="btn_simpanData" onclick="save_form()">Simpan</button>
+        <script>
+
+          function save_form(){
+            var valid
+            var counter = 0;
+            for (var i = 0; i < 1; i++){
+              valid = document.getElementsByClassName("form-control")[i].checkValidity();
+              if (valid == false){
+                counter++;
+              }
+            }
+            if(counter == 0){
+              document.getElementById("form_mutu").submit();
+            } else if(counter > 0) {
+              alert("Isian Tidak Boleh Kosong");
+            }
+          }
+
+          function onlyNumberKey(evt) {
+            // Only ASCII character in that range allowed
+            var ASCIICode = (evt.which) ? evt.which : evt.keyCode
+            if (ASCIICode > 31 && (ASCIICode < 48 || ASCIICode > 57))
+              return false;
+              return true;
+          }
+        </script>
+      </div>
+    </div>
+    <div class="card-body overflow-auto">
+      <form action="add_satuan/save" class="h-100" method="POST" id="form_mutu">
+      {% csrf_token %}
+      <div class="d-flex flex-row h-100">
+        <div class="d-flex w-50 flex-column">
+          <label for="nama_satuan" class="form-label">Nama Satuan</label>
+          <input type="text" class="form-control" name="nama_satuan" onkeyup="this.value = this.value.charAt(0).toUpperCase() + this.value.slice(1);" required>
+        </div>
+        <div class="d-flex w-50 flex-column align-items-end justify-content-end">
+           <img src="{% static 'img/add_mutu_illust.svg' %}" style="width: 360px; height: auto;">
+        </div>
+      </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}
